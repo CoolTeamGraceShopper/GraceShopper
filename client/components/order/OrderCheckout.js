@@ -7,18 +7,17 @@ class OrderCheckout extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            newEmailEntry: "",
-            newFirstNameEntry: "",
-            newLastNameEntry: "",
-            newCompanyEntry: "",
-            newAddressEntry: "",
-            newAptEntry: "",
-            newCityEntry: "",
-            newCountryEntry:"",
-            newStateEntry:"",
-            newZipEntry: "",
-            newPhoneEntry: ""
-        }
+            newEmailEntry: props.user.email || '',
+            newFirstNameEntry: props.user.first || '',
+            newLastNameEntry: props.user.last || '',
+            newAddressEntry: props.user.street || '',
+            newAptEntry: props.user.street2 || '',
+            newCityEntry: props.user.city || '',
+            newCountryEntry: props.user.country || '',
+            newStateEntry: props.user.state || '',
+            newZipEntry: props.user.zip || '',
+            newPhoneEntry: props.user.phone || '',
+
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
     }
@@ -159,8 +158,9 @@ class OrderCheckout extends React.Component {
     }
 
     handleSubmit(event){
-        event.preventDefault()
-				this.props.fullFillOrder(this.props.activeOrder.id)
+        event.preventDefault();
+				let isLoggedIn = this.props.user.id ? true : false
+				this.props.fullFillOrder(this.props.activeOrder.id, this.props)
 
     }
 }
@@ -168,14 +168,15 @@ class OrderCheckout extends React.Component {
 const mapState = (state, ownProps) => {
     return {
         activeOrder: state.activeOrder,
-				user: state.user
+				user: state.user,
+				unAuthUser: state.unAuthUser
     }
 }
 
 const mapDispatch = (dispatch, ownProps) => {
 	return {
-		fullFillOrder(id) {
-			dispatch(fullFillOrder(id))
+		fullFillOrder(id, props) {
+			dispatch(fullFillOrder(id, props))
 		}
 	}
 }
